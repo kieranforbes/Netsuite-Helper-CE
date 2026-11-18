@@ -6,6 +6,7 @@ After updating it, reload the extension and refresh your NetSuite record tab.
 Click a field label to open Field Help:
 
 - **Copy** copies the field ID, animates the button, and displays **Copied!** after a successful copy. Reduced-motion preferences disable the animation.
+- **Open custom field** appears next to Copy for custom fields and opens their definition in a new tab. It matches the script ID in the native list for transaction body/column, entity, item, item number, CRM, and other record fields. Your role must have access to the relevant customization list and definition. Script-only `custpage` fields have no stored definition and do not show this button.
 - **Search this value** opens an unsaved NetSuite search in a new tab for the current record type, filtered by that field's current value. The URL requests Advanced Search mode (`adv=T`). Dropdowns use internal IDs, dates use the account's current date format, and empty values search for empty fields. Multiselects match any selected value. Common transaction types use Main Line = Yes.
 - **Shift-click a field label** to copy its ID directly.
 

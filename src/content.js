@@ -72,10 +72,10 @@
       infoEl.style.fontSize = '14px';
       infoEl.style.whiteSpace = 'normal';
       infoEl.style.wordBreak = 'break-word';
-      infoEl.style.display = 'flex';
-      infoEl.style.alignItems = 'center';
-      infoEl.style.gap = '8px';
-      infoEl.style.flexWrap = 'wrap';
+      infoEl.style.display = 'grid';
+      infoEl.style.gridTemplateColumns = 'minmax(0, 1fr) max-content';
+      infoEl.style.alignItems = 'start';
+      infoEl.style.gap = '8px 16px';
       insertRoot.insertBefore(infoEl, iframeEl || insertRoot.firstChild);
     }
 
@@ -83,10 +83,22 @@
     if (!labelEl) {
       labelEl = document.createElement('div');
       labelEl.setAttribute('data-nsh-field-id-label', 'true');
-      labelEl.style.flex = '1';
+      labelEl.style.minWidth = '0';
+      labelEl.style.paddingTop = '4px';
       infoEl.appendChild(labelEl);
     }
     labelEl.textContent = fieldText;
+
+    let actionsEl = infoEl.querySelector('[data-nsh-field-actions="true"]');
+    if (!actionsEl) {
+      actionsEl = document.createElement('div');
+      actionsEl.setAttribute('data-nsh-field-actions', 'true');
+      Object.assign(actionsEl.style, {
+        display: 'flex', flexDirection: 'column', gap: '6px',
+        gridColumn: '2', gridRow: '1', minWidth: '136px',
+      });
+      infoEl.appendChild(actionsEl);
+    }
 
     let copyBtn = infoEl.querySelector('[data-nsh-field-id-copy="true"]');
     if (!copyBtn) {
@@ -119,9 +131,25 @@
           copyBtn.style.borderColor = '#c0c0c0';
         }, 1400));
       });
-      infoEl.appendChild(copyBtn);
+      actionsEl.appendChild(copyBtn);
     }
     copyBtn.dataset.fieldId = state.lastFieldId;
+
+    let customFieldBtn = infoEl.querySelector('[data-nsh-custom-field="true"]');
+    const isCustomField = /^(custbody|custcol|custentity|custitemnumber|custitem(?!number|option)|custevent|custother)[a-z0-9_]+$/i.test(state.lastFieldId);
+    if (isCustomField && !customFieldBtn) {
+      customFieldBtn = document.createElement('button');
+      customFieldBtn.type = 'button';
+      customFieldBtn.setAttribute('data-nsh-custom-field', 'true');
+      customFieldBtn.textContent = 'Open custom field';
+      customFieldBtn.title = 'Open the custom field definition in a new tab';
+      styleButton(customFieldBtn);
+      actionsEl.insertBefore(customFieldBtn, copyBtn.nextSibling);
+    }
+    if (customFieldBtn) {
+      customFieldBtn.hidden = !isCustomField;
+      customFieldBtn.dataset.fieldId = state.lastFieldId;
+    }
 
     let searchBtn = infoEl.querySelector('[data-nsh-field-search="true"]');
     if (!searchBtn) {
@@ -131,13 +159,13 @@
       searchBtn.textContent = 'Search this value';
       searchBtn.title = 'Open a search of this record type using the current field value in a new tab';
       styleButton(searchBtn);
-      infoEl.appendChild(searchBtn);
+      actionsEl.appendChild(searchBtn);
 
       const status = document.createElement('div');
       status.setAttribute('data-nsh-search-status', 'true');
       status.setAttribute('role', 'status');
       Object.assign(status.style, {
-        flexBasis: '100%', fontSize: '12px', fontWeight: '400', color: '#9c2929',
+        gridColumn: '1 / -1', fontSize: '12px', fontWeight: '400', color: '#9c2929',
       });
       status.hidden = true;
       infoEl.appendChild(status);

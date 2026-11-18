@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
   "name": "NetSuite Field ID Helper",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "Copy NetSuite field IDs and search records by a field's current value from Field Help.",
   "content_scripts": [
     {
       "matches": ["*://*.netsuite.com/*"],
-      "js": ["src/search.js"],
+      "js": ["src/search.js", "src/custom-field.js"],
       "world": "MAIN",
       "run_at": "document_idle"
     },
